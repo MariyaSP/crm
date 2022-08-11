@@ -11,9 +11,9 @@
   background: rgba(255, 255, 255, 0.8);
 }
 
-.modal__display {
-  display: flex;
-}
+/*.modal__display {*/
+/*  display: flex;*/
+/*}*/
 
 .overlay__modal {
   position: absolute;
