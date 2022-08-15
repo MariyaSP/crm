@@ -106,8 +106,7 @@ const removeGood = (id) => {
     if(good.id === parseInt(id)){
       console.log(`номер удаляемой записи ${i}`);
       goods.splice(i, 1);
-      console.log(goods);
-    }
+git     }
   });
 
 }
