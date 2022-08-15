@@ -1,5 +1,5 @@
 'use strict';
-const goods= [
+let goods= [
   {
     "id": 253842678,
     "title": "Смартфон Xiaomi 11T 8/128GB",
@@ -72,11 +72,12 @@ const total = document.querySelector('.modal__total-price');
 const modal = document.querySelector('.overlay');
 const goodsTable = document.querySelector('.table__body');
 const btnAdd = document.querySelector('.panel__add-goods');
-
 modal.classList.toggle('active');
 
 const createRow = (good) =>{
   const trGood = document.createElement('tr');
+  trGood.classList.add('good__item');
+  trGood.dataset.goodId = good.id;
   trGood.innerHTML = `
   <td class="table__cell ">${good.id}</td>
                 <td class="table__cell table__cell_left table__cell_name">${good.title}</td>
@@ -98,25 +99,45 @@ const renderGoods = (goods) =>{
   goodsTable.innerHTML = "";
   goods.forEach(itemGoods => {
     goodsTable.append(createRow(itemGoods));
-  })
+  });
 }
+const removeGood = (id) => {
+  goods.forEach((good,i) => {
+    if(good.id === parseInt(id)){
+      console.log(`номер удаляемой записи ${i}`);
+      goods.splice(i, 1);
+      console.log(goods);
+    }
+  });
 
+}
 btnAdd.addEventListener('click', () => {
-  modal.classList.add('active');
-  modal.classList.add('modal__display');
+  modal.classList.toggle('active');
+  modal.classList.toggle('modal__display');
 });
 
-modalClose.addEventListener('click', () => {
-  modal.classList.remove('active');
-  modal.classList.remove('modal__display');
-});
+// modalClose.addEventListener('click', () => {
+//   modal.classList.remove('active');
+//   modal.classList.remove('modal__display');
+// });
 // блокировка всплытия событий
-modalOverlay .addEventListener('click', e => {
-  e.stopPropagation();
-})
-modal.addEventListener('click', () => {
-  modal.classList.remove('active');
-  modal.classList.remove('modal__display');
-});
+// modalOverlay .addEventListener('click', e => {
+//   e.stopPropagation();
+// })
 
+
+modal.addEventListener('click', (e) => {
+  const target = e.target;
+  if(target === modal || target.closest('.modal__close')) {
+    modal.classList.toggle('active');
+    modal.classList.toggle('modal__display');
+  }
+});
+goodsTable.addEventListener('click', (e) => {
+  const target = e.target;
+  if(target.closest('.table__btn_del')){
+    removeGood(target.closest('.good__item').dataset.goodId);
+    target.closest('.good__item').remove();
+  }
+});
 renderGoods(goods);
