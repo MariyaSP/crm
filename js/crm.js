@@ -92,9 +92,9 @@ const renderId = () =>{
 
 const addGoodData = good => {
   goods.push(good);
-  console.log(good);
 };
 const createRow = (good) =>{
+  console.log(good);
   const trGood = document.createElement('tr');
   trGood.classList.add('good__item');
   trGood.dataset.goodId = good.id;
@@ -111,7 +111,6 @@ const createRow = (good) =>{
                   <button class="table__btn table__btn_edit"></button>
                   <button class="table__btn table__btn_del"></button>
                 </td>`;
-  console.log(trGood);
   return trGood;
 }
 
@@ -155,7 +154,9 @@ form.addEventListener('submit', e => {
   e.preventDefault();
   const formData = new FormData(e.target);
   const newGood = Object.fromEntries(formData);
+
   newGood.id = goodsId.textContent;
+  console.log(newGood);
   addGoodData(newGood);
   renderGoods(goods);
   form.reset();
