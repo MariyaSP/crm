@@ -63,7 +63,6 @@ let trGoods = [];
 const modalTitle = document.querySelector('.modal__title');
 const buttonId = document.querySelector('.vendor-code__btn');
 const goodsId = document.querySelector('.vendor-code__id');
-const modalForm = document.querySelector('.modal__form');
 const modalClose = document.querySelector('.modal__close');
 const modalOverlay = document.querySelector('.overlay__modal');
 const modalCheckbox = document.querySelector('.modal__checkbox');
@@ -72,8 +71,29 @@ const total = document.querySelector('.modal__total-price');
 const modal = document.querySelector('.overlay');
 const goodsTable = document.querySelector('.table__body');
 const btnAdd = document.querySelector('.panel__add-goods');
+const form = document.querySelector('.modal__form');
+const crmTotalPrice = document.querySelector('.crm__total-price');
 modal.classList.toggle('active');
+modalCheckbox.addEventListener('click', () =>{
+  if(modalCheckbox.checked === true){
+    modalDiscount.disabled = false;
+  }
+  else {
+    modalDiscount.disabled = true;
+    modalDiscount.value = '';
+  }
 
+});
+const renderId = () =>{
+  const id = Math.floor(Math.random() * 100000000);
+  goodsId.textContent = id;
+  return id;
+};
+
+const addGoodData = good => {
+  goods.push(good);
+  console.log(good);
+};
 const createRow = (good) =>{
   const trGood = document.createElement('tr');
   trGood.classList.add('good__item');
@@ -96,23 +116,27 @@ const createRow = (good) =>{
 }
 
 const renderGoods = (goods) =>{
+  let totalCrm = 0;
   goodsTable.innerHTML = "";
   goods.forEach(itemGoods => {
+    totalCrm += itemGoods.count * itemGoods.price;
     goodsTable.append(createRow(itemGoods));
   });
+  crmTotalPrice.textContent = '$ ' + totalCrm;
 }
 const removeGood = (id) => {
   goods.forEach((good,i) => {
     if(good.id === parseInt(id)){
-      console.log(`номер удаляемой записи ${i}`);
       goods.splice(i, 1);
-git     }
+  }
   });
 
 }
 btnAdd.addEventListener('click', () => {
   modal.classList.toggle('active');
   modal.classList.toggle('modal__display');
+  totalPriceModal();
+  formControl(form, renderId());
 });
 
 // modalClose.addEventListener('click', () => {
@@ -124,7 +148,32 @@ btnAdd.addEventListener('click', () => {
 //   e.stopPropagation();
 // })
 
+const formControl = (form, id) => {
+form.count.addEventListener('blur', totalPriceModal);
+form.price.addEventListener('blur', totalPriceModal);
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const newGood = Object.fromEntries(formData);
+  newGood.id = goodsId.textContent;
+  addGoodData(newGood);
+  renderGoods(goods);
+  form.reset();
+  totalPriceModal();
+  renderId();
 
+
+});
+  // const formControl = (form, list, closeModal) => {
+  //   form.addEventListener('submit', e => {
+  //     e.preventDefault();
+  //     const formData = new FormData(e.target);
+  //     const newContact = Object.fromEntries(formData);
+  //     addContactPage(newContact, list);
+  //     addContactData(newContact);
+  //     form.reset(); // очистка формы после отправки
+  //     closeModal();
+};
 modal.addEventListener('click', (e) => {
   const target = e.target;
   if(target === modal || target.closest('.modal__close')) {
@@ -139,4 +188,10 @@ goodsTable.addEventListener('click', (e) => {
     target.closest('.good__item').remove();
   }
 });
+const totalPriceModal = () =>{
+
+ total.textContent = '$ ' + form.count.value * form.price.value;
+return total.textContent;
+};
 renderGoods(goods);
+
