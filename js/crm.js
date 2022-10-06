@@ -4,7 +4,7 @@ import goodsControl from "./modules/goodsControl.js";
 import modalControl from "./modules/modalControl.js";
 
 const {  getStorage, setStorage, removeStorage} = storageControl;
-const { renderGoods, removeGood, renderId } = goodsControl;
+const { renderGoods, removeGood, renderId, imgView } = goodsControl;
 const {
   goodsId,
   modalCheckbox,
@@ -62,6 +62,11 @@ const init = () => {
     if(target.closest('.table__btn_del')){
       removeGood(target.closest('.good__item').dataset.goodId, goods);
       target.closest('.good__item').remove();
+    }
+    if(target.closest('.table__btn_pic')){
+      const url = target.closest('.good__item').getAttribute('data-pic');
+    imgView(url, 600);
+
     }
   });
 
